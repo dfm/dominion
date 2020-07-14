@@ -361,18 +361,25 @@ def format_deck(
     other = []
     for name in deck:
         card = cards[index[name.lower()]]
-        if card["Types"] in non_supply_types:
-            other.append(f"{card['Set']}:{card['Name']}:{card['Types']}")
+
+        if card["Name"] == "Horse":
             continue
 
-        supply.append(f"{card['Set']}:{card['Name']}:{card['Types']}")
+        if card["Types"] in non_supply_types:
+            other.append(f" - {card['Set']}:{card['Name']}:{card['Types']}")
+            continue
 
-    result = "Supply:\n" + "\n".join(sorted(supply))
+        supply.append(f" - {card['Set']}:{card['Name']}:{card['Types']}")
+
+    # Deal with extra cards
     if len(other) > 3:
         random.shuffle(other)
         other = other[:3]
+
+    # Format the results
+    result = f"Supply ({len(supply)}):\n" + "\n".join(sorted(supply))
     if other:
-        result += "\n\nOther:\n" + "\n".join(sorted(other))
+        result += f"\n\nOther ({len(other)}):\n" + "\n".join(sorted(other))
     return result
 
 
