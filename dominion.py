@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import json
@@ -306,6 +307,7 @@ def get_normalization(cards: List[Card]) -> Counter[str]:
     for card in cards:
         total.update(card["Forward"])
         total.update(card["Reverse"])
+        total.update(card["Recommended"])
     return total
 
 
@@ -350,7 +352,10 @@ def check_state(
 
 
 def format_deck(
-    cards: List[Card], index: Dict[str, int], deck: List[str],
+    cards: List[Card],
+    index: Dict[str, int],
+    deck: List[str],
+    max_other: int = 3,
 ) -> str:
     supply = []
     other = []
@@ -376,6 +381,7 @@ def build_new_deck(
     index: Dict[str, int],
     deck: List[str],
     seed: Optional[int] = None,
+    max_other: int = 3,
 ) -> str:
     if seed is not None:
         random.seed(seed)
@@ -385,18 +391,20 @@ def build_new_deck(
         deck.append(find_next(cards, index, norm, deck))
         deck = list(sorted(set(c.lower() for c in deck)))
 
-    return format_deck(cards, index, deck)
+    return format_deck(cards, index, deck, max_other=max_other)
 
 
 @cli.command()
 @filename_option
 @sets_option
 @click.option("-c", "--cards", type=str, multiple=True)
+@click.option("-m", "--max-other", type=int, default=3)
 @click.option("--seed", type=int, default=None)
 def generate(
     filename: click.Path,
     sets: Optional[List[str]],
     cards: List[str],
+    max_other: int,
     seed: Optional[int],
 ) -> None:
     if not sets:
@@ -408,7 +416,9 @@ def generate(
         if card.lower() not in index:
             raise ValueError(f"unrecognized card '{card}'")
         deck.append(all_cards[index[card.lower()]]["Name"])
-    print(build_new_deck(all_cards, index, deck, seed))
+    print(
+        build_new_deck(all_cards, index, deck, seed=seed, max_other=max_other)
+    )
 
 
 if __name__ == "__main__":
