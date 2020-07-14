@@ -17,39 +17,39 @@ python -m pip install dominion
 You can generate a random, well-connected kingdom using all the expansions:
 
 ```bash
-./dominion.py generate
+dominion generate
 ```
 
 You can restrict the code to a subset of the expansions:
 
 ```bash
-./dominion.py generate -s base -s prosperity -s seaside
+dominion generate -s base -s prosperity -s seaside
 ```
 
 Note that you can list the supported expansions using:
 
 ```bash
-./dominion.py list sets
+dominion list sets
 ```
 
 You can start the kingdom off with your favorite cards:
 
 ```bash
-./dominion.py generate -c "king's court" -c village
+dominion generate -c "king's court" -c village
 ```
 
 As above, you can see the available cards using:
 
 ```bash
-./dominion.py list cards
+dominion list cards
 # or
-./dominion.py list cards -s prosperity -s base
+dominion list cards -s prosperity -s base
 ```
 
 Finally, for good measure you can get a deterministic result using:
 
 ```bash
-./dominion.py generate --seed 42
+dominion generate --seed 42
 ```
 
 ## Updating the graph
@@ -57,7 +57,7 @@ Finally, for good measure you can get a deterministic result using:
 The graph of card information and connections is included in this repository, but you can update it using:
 
 ```bash
-./dominion.py setup data/cards.json
+dominion setup data/cards.json
 ```
 
 You'll need to have [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) and [requests](https://requests.readthedocs.io) installed, and installing [tqdm](https://tqdm.github.io/) doesn't hurt.
