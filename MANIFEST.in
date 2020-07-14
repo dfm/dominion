@@ -1,1 +1,4 @@
 include README.md LICENSE src/dominion/data/cards.json
+
+exclude .gitignore
+recursive-exclude .github *
