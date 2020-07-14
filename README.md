@@ -59,3 +59,13 @@ Finally, for good measure you can get a deterministic result using:
 ```bash
 ./dominion.py generate --seed 42
 ```
+
+## Updating the graph
+
+The graph of card information and connections is included in this repository, but you can update it using:
+
+```bash
+./dominion.py setup data/cards.json
+```
+ 
+You'll need to have [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) and [requests](https://requests.readthedocs.io) installed, and installing [tqdm](https://tqdm.github.io/) doesn't hurt.
