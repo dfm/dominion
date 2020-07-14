@@ -11,6 +11,7 @@ from urllib.parse import unquote
 
 import click
 import pkg_resources
+from pkg_resources import get_distribution, DistributionNotFound
 
 try:
     from tqdm import tqdm
@@ -21,6 +22,12 @@ try:
     from bs4 import BeautifulSoup
 except ImportError:
     BeautifulSoup = None
+
+try:
+    __version__ = get_distribution(__name__).version
+except DistributionNotFound:
+    __version__ = "unknown"
+
 
 BASE_URL: str = "http://wiki.dominionstrategy.com/index.php"
 DEFAULT_FILENAME: str = pkg_resources.resource_filename(
@@ -83,6 +90,11 @@ sets_option = click.option("-s", "--sets", type=str, multiple=True)
 @click.group()
 def cli():
     pass
+
+
+@cli.command()
+def version():
+    print(__version__)
 
 
 @cli.group(name="list")

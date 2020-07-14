@@ -6,18 +6,10 @@ In general, I've found the resulting games to be more fun than the randomly gene
 
 ## Installation
 
-The only requirement to run the script is [click](https://click.palletsprojects.com/):
+The best way to install is using pip:
 
 ```bash
-python -m pip install click
-```
-
-Then you can run this script as follows:
-
-```bash
-git clone https://github.com/dfm/dominion
-cd dominion
-./dominion.py generate
+python -m pip install dominion
 ```
 
 ## Usage
@@ -67,5 +59,5 @@ The graph of card information and connections is included in this repository, bu
 ```bash
 ./dominion.py setup data/cards.json
 ```
- 
+
 You'll need to have [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) and [requests](https://requests.readthedocs.io) installed, and installing [tqdm](https://tqdm.github.io/) doesn't hurt.
