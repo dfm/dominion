@@ -1,5 +1,6 @@
-from setuptools import setup
-from pathlib import Path  # noqa E402
+import os
+from setuptools import find_packages, setup
+from pathlib import Path
 
 CURRENT_DIR = Path(__file__).parent
 
@@ -12,7 +13,10 @@ def get_long_description() -> str:
 
 setup(
     name="dominion",
-    use_scm_version=True,
+    use_scm_version={
+        "write_to": os.path.join("src", "dominion", "dominion_version.py"),
+        "write_to_template": '__version__ = "{version}"\n',
+    },
     description="Generate kingdom sets for the card game Dominion",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
@@ -20,10 +24,11 @@ setup(
     author_email="foreman.mackey@gmail.com",
     url="https://github.com/dfm/dominion",
     license="MIT",
-    py_modules=["dominion"],
+    packages=find_packages(where="src"),
     python_requires=">=3.6",
     package_data={"dominion": ["data/cards.json"]},
     include_package_data=True,
+    package_dir={"": "src"},
     zip_safe=False,
     install_requires=["click"],
     classifiers=[
@@ -35,4 +40,5 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
     ],
     entry_points={"console_scripts": ["dominion=dominion:cli"]},
+    options={"bdist_wheel": {"universal": "1"}},
 )

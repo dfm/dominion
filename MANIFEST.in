@@ -1,1 +1,1 @@
-include README.md LICENSE data/cards.json
+include README.md LICENSE src/dominion/data/cards.json
