@@ -366,10 +366,10 @@ def format_deck(
             continue
 
         if card["Types"] in non_supply_types:
-            other.append(f" - {card['Set']}:{card['Name']}:{card['Types']}")
+            other.append(f" - {card['Set']}: {card['Name']} ({card['Types']})")
             continue
 
-        supply.append(f" - {card['Set']}:{card['Name']}:{card['Types']}")
+        supply.append(f" - {card['Set']}: {card['Name']} ({card['Types']})")
 
     # Deal with extra cards
     if len(other) > 3:
