@@ -4,13 +4,13 @@
 import json
 import math
 import os
-import pkg_resources
 import random
 import re
-from urllib.parse import unquote
 from typing import Counter, Dict, List, Optional, Set, TypedDict
+from urllib.parse import unquote
 
 import click
+import pkg_resources
 
 try:
     from tqdm import tqdm
