@@ -76,6 +76,11 @@ class Card(TypedDict, total=False):
     Recommended: List[str]
 
 
+card_groups: Dict[str, Card] = dict(
+    Knight={"Name": "Knights", "Set": "Dark Ages"},
+    Castle={"Name": "Castles", "Set": "Empires"},
+)
+
 filename_option = click.option(
     "-f", "--filename", type=click.Path(), default=DEFAULT_FILENAME
 )
@@ -153,9 +158,9 @@ def get_and_parse_page(pagename: str) -> BeautifulSoup:
     return BeautifulSoup(r.content, "html.parser")
 
 
-def get_all_cards():
+def get_all_cards() -> List[Card]:
     soup = get_and_parse_page("All_Cards")
-    cards = []
+    cards: List[Card] = []
     headers = None
     for row in soup.find("table", {"class": "wikitable"}).find_all("tr"):
         entries = [d.text.strip() for d in row.find_all("th")]
@@ -177,13 +182,32 @@ def get_all_cards():
             for br in data.find_all("br"):
                 br.replaceWith("\n")
             entries.append(data.text.strip())
-        card = dict(zip(headers, entries))
 
-        parts = card["Set"].split(", ")
-        if len(parts) > 1 and parts[1] == "1E":
-            continue
-        card["Set"] = parts[0]
-        cards.append(card)
+        if headers:
+            card: Card = {
+                "Name": entries[headers.index("Name")],
+                "Set": entries[headers.index("Set")],
+                "Types": entries[headers.index("Types")],
+                "Cost": entries[headers.index("Cost")],
+                "Text": entries[headers.index("Text")],
+                "Actions_Villagers": entries[
+                    headers.index("Actions / Villagers")
+                ],
+                "Cards": entries[headers.index("Cards")],
+                "Buys": entries[headers.index("Buys")],
+                "Coins_Coffers": entries[headers.index("Coins / Coffers")],
+                "Trash": entries[headers.index("Trash")],
+                "Exile": entries[headers.index("Exile")],
+                "Junk": entries[headers.index("Junk")],
+                "Gain": entries[headers.index("Gain")],
+                "Victory_Points": entries[headers.index("Victory Points")],
+            }
+
+            parts = card["Set"].split(", ")
+            if len(parts) > 1 and parts[1] == "1E":
+                continue
+            card["Set"] = parts[0]
+            cards.append(card)
 
     return cards
 
@@ -267,9 +291,37 @@ def populate_reverse_links(cards: List[Card]) -> List[Card]:
     return cards
 
 
+def combine_groups(cards: List[Card]) -> List[Card]:
+    index = build_index(cards)
+    for name, group in card_groups.items():
+        ind = index[group["Name"].lower()]
+        for card in cards:
+            if name in card.get("Types", ""):
+                cards[ind]["Forward"] = list(
+                    set(
+                        cards[ind].get("Forward", []) + card.get("Forward", [])
+                    )
+                )
+                cards[ind]["Reverse"] = list(
+                    set(
+                        cards[ind].get("Reverse", []) + card.get("Reverse", [])
+                    )
+                )
+                cards[ind]["Recommended"] = list(
+                    set(
+                        cards[ind].get("Recommended", [])
+                        + card.get("Recommended", [])
+                    )
+                )
+    return cards
+
+
 def build_graph() -> List[Card]:
     print("Getting the list of all cards...")
     cards = get_all_cards()
+
+    print("Adding known card groups...")
+    cards += list(card_groups.values())
 
     print("Finding the recommended sets of 10...")
     cards = find_recommended_sets(cards)
@@ -279,6 +331,9 @@ def build_graph() -> List[Card]:
 
     print("Populating the reverse links...")
     cards = populate_reverse_links(cards)
+
+    print("Combining groups...")
+    cards = combine_groups(cards)
 
     return cards
 

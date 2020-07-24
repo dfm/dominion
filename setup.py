@@ -31,6 +31,16 @@ setup(
     package_dir={"": "src"},
     zip_safe=False,
     install_requires=["click"],
+    extras_require={
+        "dev": [
+            "beautifulsoup4",
+            "requests",
+            "tqdm",
+            "mypy",
+            "flake8",
+            "black",
+        ]
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
