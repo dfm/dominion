@@ -66,7 +66,7 @@ class Card(TypedDict, total=False):
     Cards: str
     Buys: str
     Coins_Coffers: str
-    Trash: str
+    Trash_Return: str
     Exile: str
     Junk: str
     Gain: str
@@ -196,7 +196,7 @@ def get_all_cards() -> List[Card]:
                 "Cards": entries[headers.index("Cards")],
                 "Buys": entries[headers.index("Buys")],
                 "Coins_Coffers": entries[headers.index("Coins / Coffers")],
-                "Trash": entries[headers.index("Trash")],
+                "Trash_Return": entries[headers.index("Trash / Return")],
                 "Exile": entries[headers.index("Exile")],
                 "Junk": entries[headers.index("Junk")],
                 "Gain": entries[headers.index("Gain")],
@@ -238,7 +238,10 @@ def find_recommended_sets(cards: List[Card]) -> List[Card]:
         soup = get_and_parse_page(setname)
         header = soup.find(
             "span", {"class": "mw-headline"}, text=re.compile("Recommended"),
-        ).parent
+        )
+        if header is None:
+            continue
+        header = header.parent
         for table in header.find_next_siblings(
             "table", {"class": "wikitable"}
         ):
